@@ -1,12 +1,12 @@
-# nix-home
+# nix-user
 
-Personal Home Manager setup as a reusable flake module.
+Declarative user profiles shared by NixOS and nix-darwin without Home Manager.
 
 ## What this provides
 
-- `homeManagerModules.tcurdt` as the main module to import from other flakes
-- `nixosModules.default` to enable Home Manager on NixOS with sane defaults
-- Platform-specific layering via `modules/darwin.nix` and `modules/linux.nix`
+- `nixosModules.profiles` for NixOS consumers
+- `darwinModules.profiles` for nix-darwin consumers
+- `profile.tcurdt` as the shared account profile
 
 ## Local usage
 
@@ -19,37 +19,33 @@ nix flake check path:.
 Add input:
 
 ```nix
-inputs.home.url = "github:tcurdt/nix-home";
+inputs.nix-user.url = "github:tcurdt/nix-user";
 ```
 
-Import module:
+Import the platform module:
 
 ```nix
-home-manager.users.tcurdt.imports = [
-  inputs.home.homeManagerModules.tcurdt
+imports = [
+  inputs.nix-user.nixosModules.profiles
 ];
 ```
 
-For NixOS, import the integration module once:
+For nix-darwin, use the Darwin module instead:
 
 ```nix
-modules = [
-  inputs.home.nixosModules.default
-  ./machine.nix
+imports = [
+  inputs.nix-user.darwinModules.profiles
 ];
 ```
 
-After changing this flake, update consumers such as `nix-server`:
+Assign the profile to an account on either platform:
 
-```bash
-cd ../nix-server
-just update
-just check
+```nix
+users.users.tcurdt.profile = import inputs.nix-user.profile.tcurdt;
 ```
 
 ## Layout
 
-- `modules/common.nix`: shared config
-- `modules/darwin.nix`: macOS-specific additions
-- `modules/linux.nix`: Linux-specific additions
-- `flake.nix`: exports `homeManagerModules.tcurdt` and composes modules
+- `modules/profiles.nix`: shared profile schema and platform activation backends
+- `profiles/tcurdt.nix`: account packages and configuration
+- `flake.nix`: module and profile exports
