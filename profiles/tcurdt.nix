@@ -100,8 +100,10 @@ in
 {
   packages = with pkgs; [
     nano
-    zellij
+    zellij # tmux
+    tmux
     curl
+    xh
     yq
     jq
     openssl
@@ -111,26 +113,23 @@ in
     mmv
     file
     dnsutils
-    doggo
+    doggo # dig
     parallel
     just
     diceware
-    xh
-    pv
     croc
-    sd
-    fd
-    eza
-    bat
-    procs
+    sd # sed
+    fd # find
     ripgrep
     ruplacer
-    dust
+    eza
+    bat
+    procs # ps
+    dust # du
+    pv
     nh
     nixfmt
     nil
-    neovim
-    tmux
     direnv
     nix-direnv
   ];
@@ -141,8 +140,6 @@ in
     ll = "eza -la --group --octal-permissions --no-permissions --time-style long-iso";
     ls = "eza";
     g = "git";
-    vi = "nvim";
-    vim = "nvim";
     tssh = "ssh -A -o UserKnownHostsFile=/dev/null ";
     passphrase = "diceware --no-caps -n 7 -d -";
     p = "pnpm";
